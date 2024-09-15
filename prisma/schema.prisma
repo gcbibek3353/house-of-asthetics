@@ -21,7 +21,7 @@ model Product {
 }
 
 model order {
-  id          String   @unique @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   phone       String
   email       String
@@ -30,6 +30,7 @@ model order {
   address     String
   createdDate DateTime @default(now())
   product     Json
+  total       Int
   status      status   @default(processing)
 }
 

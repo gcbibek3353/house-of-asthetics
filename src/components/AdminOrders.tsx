@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OrderForm from "./OrderForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,85 +47,45 @@ import {
   Filter,
   Plus,
 } from "lucide-react";
+import { fetchOrders, updateOrderStatus } from "@/actions/order";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
-// Mock data for initial orders
-const initialOrders = [
-  {
-    id: "ORD001",
-    customer: "John Doe",
-    date: "2023-07-01",
-    total: 199.99,
-    status: "Delivered",
-    items: [{ name: "Ergonomic Desk Chair", quantity: 1, price: 199.99 }],
-  },
-  {
-    id: "ORD002",
-    customer: "Jane Smith",
-    date: "2023-07-02",
-    total: 529.97,
-    status: "Processing",
-    items: [
-      { name: "Wireless Headphones", quantity: 1, price: 249.99 },
-      { name: "Smart Home Camera", quantity: 1, price: 129.99 },
-      { name: "Organic Cotton T-Shirt", quantity: 5, price: 29.99 },
-    ],
-  },
-  {
-    id: "ORD003",
-    customer: "Bob Johnson",
-    date: "2023-07-03",
-    total: 24.99,
-    status: "Shipped",
-    items: [
-      { name: "Stainless Steel Water Bottle", quantity: 1, price: 24.99 },
-    ],
-  },
-  {
-    id: "ORD004",
-    customer: "Alice Brown",
-    date: "2023-07-04",
-    total: 399.98,
-    status: "Processing",
-    items: [{ name: "Ergonomic Desk Chair", quantity: 2, price: 199.99 }],
-  },
-  {
-    id: "ORD005",
-    customer: "Charlie Davis",
-    date: "2023-07-05",
-    total: 154.98,
-    status: "Delivered",
-    items: [
-      { name: "Smart Home Camera", quantity: 1, price: 129.99 },
-      { name: "Stainless Steel Water Bottle", quantity: 1, price: 24.99 },
-    ],
-  },
-];
-
-const statusOptions = ["Processing", "Shipped", "Delivered", "Cancelled"];
+const statusOptions = ["processing", "cancelled", "shipped", "delivered"];
 
 export default function AdminOrders() {
-  const [orders, setOrders] = useState(initialOrders);
+  const [orders, setOrders] = useState<any>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isAddOrderOpen, setIsAddOrderOpen] = useState(false);
 
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const product = await fetchOrders();
+      setOrders(product);
+      console.log(product);
+    };
+    fetchOrder();
+  }, []);
+
   const filteredOrders = orders.filter(
-    (order) =>
+    (order: any) =>
       (order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.customer.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (statusFilter === "All" || order.status === statusFilter)
   );
 
-  const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+  const totalRevenue = orders.reduce(
+    (sum: any, order: any) => sum + order.total,
+    0
+  );
   const averageOrderValue = totalRevenue / orders.length;
 
-  const handleStatusChange = (orderId: any, newStatus: any) => {
-    setOrders(
-      orders.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
+  const handleStatusChange = async (orderId: any, newStatus: any) => {
+    const orders = await updateOrderStatus({ orderId, status: newStatus });
+    setOrders(orders);
+    toast.success("Status Updated");
     setSelectedOrder(null);
   };
 
@@ -217,6 +177,8 @@ export default function AdminOrders() {
             <TableRow>
               <TableHead>Order ID</TableHead>
               <TableHead>Customer</TableHead>
+              <TableHead>Phone</TableHead>
+              <TableHead>Email</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Total</TableHead>
               <TableHead>Status</TableHead>
@@ -227,8 +189,12 @@ export default function AdminOrders() {
             {filteredOrders.map((order: any) => (
               <TableRow key={order.id}>
                 <TableCell className="font-medium">{order.id}</TableCell>
-                <TableCell>{order.customer}</TableCell>
-                <TableCell>{order.date}</TableCell>
+                <TableCell>{order.name}</TableCell>
+                <TableCell>{order.phone}</TableCell>
+                <TableCell>{order.email}</TableCell>
+                <TableCell>
+                  {new Date(order.createdDate).toLocaleDateString()}
+                </TableCell>
                 <TableCell>${order.total.toFixed(2)}</TableCell>
                 <TableCell>{order.status}</TableCell>
                 <TableCell className="text-right">
@@ -272,20 +238,42 @@ export default function AdminOrders() {
               <DialogTitle>Order Details - {selectedOrder.id}</DialogTitle>
             </DialogHeader>
             <div className="mt-4">
-              <h3 className="font-semibold">
-                Customer: {selectedOrder.customer}
-              </h3>
-              <p>Date: {selectedOrder.date}</p>
+              <h3 className="font-semibold">Customer: {selectedOrder.name}</h3>
+              <p>
+                Date: {new Date(selectedOrder.createdDate).toLocaleDateString()}
+              </p>
+              <p>Email: {selectedOrder.email}</p>
+              <p>Phone: {selectedOrder.phone}</p>
+              <p>Address: {selectedOrder.address}</p>
+              <p>City: {selectedOrder.city}</p>
+              <p>ZipCode: {selectedOrder.ZipCode}</p>
               <p>Total: ${selectedOrder.total.toFixed(2)}</p>
               <h4 className="font-semibold mt-2">Items:</h4>
-              <ul className="list-disc pl-5">
-                {selectedOrder.items.map((item: any, index: any) => (
-                  <li key={index}>
-                    {item.name} - Quantity: {item.quantity}, Price: $
-                    {item.price.toFixed(2)}
+              <ul className="list-disc pl-5 space-y-4">
+                {selectedOrder.product.map((item: any, index: any) => (
+                  <li key={index} className="flex items-center space-x-4">
+                    <Link
+                      href={`/products/${item.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+                      <div>
+                        <p className="font-semibold">{item.name}</p>
+                        <p>
+                          Quantity: {item.quantity}, Price: $
+                          {item.price.toFixed(2)}
+                        </p>
+                      </div>
+                    </Link>
                   </li>
                 ))}
               </ul>
+
               <div className="mt-4">
                 <Label>Update Status</Label>
                 <Select
