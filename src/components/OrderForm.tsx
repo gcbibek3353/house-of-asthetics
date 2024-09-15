@@ -75,17 +75,7 @@ export default function OrderForm({ onSubmit }: any) {
           required
         />
       </div>
-      <div>
-        <Label htmlFor="date">Order Date</Label>
-        <Input
-          id="date"
-          name="date"
-          type="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
-        />
-      </div>
+
       <div>
         <Label htmlFor="status">Status</Label>
         <Select

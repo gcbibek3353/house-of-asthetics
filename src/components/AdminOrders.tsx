@@ -208,19 +208,6 @@ export default function AdminOrders() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Dialog open={isAddOrderOpen} onOpenChange={setIsAddOrderOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" /> Add Order
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Order</DialogTitle>
-              </DialogHeader>
-              <OrderForm onSubmit={handleAddOrder} />
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
 
