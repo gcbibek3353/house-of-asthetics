@@ -8,6 +8,7 @@ import Link from "next/link";
 import { GetAllProducts } from "@/actions/product";
 import { useRecoilState } from "recoil";
 import { cartItemState, cartState } from "@/recoil/atom";
+import { toast } from "react-toastify";
 export default function ProductsPage() {
   const [products, setProducts] = useState<any>([]);
   const [sortBy, setSortBy] = useState("name");
@@ -32,6 +33,7 @@ export default function ProductsPage() {
             : item
         )
       );
+      toast.success("Added to cart");
     } else {
       // Otherwise, add the product to the cart
       setCartItems([...cartItems, { ...product, quantity: 1 }]);

@@ -19,10 +19,21 @@ import { useRecoilState } from "recoil";
 import { cartItemState } from "@/recoil/atom";
 import { useRouter } from "next/router";
 import { redirect } from "next/navigation";
+import { addOrder } from "@/actions/order";
+import { toast } from "react-toastify";
 
 export default function Checkout() {
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
-  //   const router = useRouter();
+
+  // Initialize state for billing details
+  const [billingDetails, setBillingDetails] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    zipCode: "",
+  });
 
   if (cartItems.length === 0) {
     redirect("/");
@@ -51,56 +62,118 @@ export default function Checkout() {
     );
   };
 
+  const handleChange = (e: any) => {
+    const { id, value } = e.target;
+    setBillingDetails((prevDetails) => ({
+      ...prevDetails,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    console.log(cartItems);
+    console.log("Billing Details: ", billingDetails);
+    const { name, email, phone, address, city, zipCode } = billingDetails;
+    const added = await addOrder({
+      name,
+      email,
+      phone,
+      address,
+      city,
+      zipcode: zipCode,
+      product: cartItems,
+    });
+
+    setCartItems([]);
+
+    toast.success("Order is placed");
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
       <div className="grid md:grid-cols-2 gap-8">
         {/* Checkout Form */}
-        <div>
+        <form onSubmit={handleSubmit}>
           <Card>
             <CardHeader>
               <CardTitle>Billing Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" placeholder="John" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" placeholder="Doe" />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  required
+                  placeholder="John Rai"
+                  value={billingDetails.name}
+                  onChange={handleChange}
+                />
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
+                  required
                   id="email"
                   type="email"
                   placeholder="john.doe@example.com"
+                  value={billingDetails.email}
+                  onChange={handleChange}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" type="number" placeholder="81XXXXXXXX" />
+                <Input
+                  required
+                  id="phone"
+                  type="number"
+                  placeholder="81XXXXXXXX"
+                  value={billingDetails.phone}
+                  onChange={handleChange}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address">Address</Label>
-                <Input id="address" placeholder="1234 Main St" />
+                <Input
+                  required
+                  id="address"
+                  placeholder="1234 Main St"
+                  value={billingDetails.address}
+                  onChange={handleChange}
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="city">City</Label>
-                  <Input id="city" placeholder="New York" />
+                  <Input
+                    required
+                    id="city"
+                    placeholder="New York"
+                    value={billingDetails.city}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="zipCode">ZIP Code</Label>
-                  <Input id="zipCode" placeholder="10001" />
+                  <Input
+                    required
+                    id="zipCode"
+                    placeholder="10001"
+                    value={billingDetails.zipCode}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
             </CardContent>
+            <CardFooter>
+              <Button type="submit" className="w-full mt-4">
+                Place Order
+              </Button>
+            </CardFooter>
           </Card>
-        </div>
+        </form>
 
         {/* Order Summary */}
         <div>
@@ -168,7 +241,6 @@ export default function Checkout() {
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
-              <Button className="w-full mt-4">Place Order</Button>
             </CardFooter>
           </Card>
         </div>

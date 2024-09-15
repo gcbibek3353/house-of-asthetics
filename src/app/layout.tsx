@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { RecoilRoot } from "recoil";
 import { Provider } from "./provider";
+import "react-toastify/dist/ReactToastify.css";
 import Cart from "@/components/Cart";
 
 export const metadata: Metadata = {

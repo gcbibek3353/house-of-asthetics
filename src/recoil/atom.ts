@@ -1,3 +1,4 @@
+"use client"
 import { atom } from "recoil";
 
 // Utility function to sync with localStorage

@@ -6,6 +6,7 @@ import { cartItemState, cartState } from "@/recoil/atom";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 
 export default function FeaturedProducts() {
@@ -35,6 +36,8 @@ export default function FeaturedProducts() {
             : item
         )
       );
+
+      toast.success("Added to cart");
     } else {
       // Otherwise, add the product to the cart
       setCartItems([...cartItems, { ...product, quantity: 1 }]);

@@ -24,10 +24,13 @@ model order {
   id          String   @unique @default(uuid())
   name        String
   phone       String
+  email       String
+  zipcode     String
+  city        String
   address     String
   createdDate DateTime @default(now())
   product     Json
-  status      status
+  status      status   @default(processing)
 }
 
 enum status {

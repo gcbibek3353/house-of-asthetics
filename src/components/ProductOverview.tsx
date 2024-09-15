@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { ShoppingCart } from "lucide-react";
 import { useRecoilState } from "recoil";
 import { cartItemState, cartState } from "@/recoil/atom";
+import { toast } from "react-toastify";
 
 export default function ProductOverview({ product, products }: any) {
   const pro = product;
@@ -34,6 +35,7 @@ export default function ProductOverview({ product, products }: any) {
             : item
         )
       );
+      toast.success("Added to cart");
     } else {
       // Otherwise, add the product to the cart
       setCartItems([...cartItems, { ...product, quantity: 1 }]);

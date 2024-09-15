@@ -38,6 +38,7 @@ import {
   ProductCreate,
   UpdateProduct,
 } from "@/actions/product";
+import { toast } from "react-toastify";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<any>([]);
@@ -65,6 +66,7 @@ export default function AdminProducts() {
     setProducts(added);
 
     setIsAddProductOpen(false);
+    toast.success("Added");
   };
 
   const handleEditProduct = async (editedProduct: any) => {
@@ -78,11 +80,14 @@ export default function AdminProducts() {
     setProducts(edited);
     console.log(edited);
     setEditingProduct(null);
+
+    toast.success("Edited");
   };
 
   const handleDeleteProduct = async (id: any) => {
     const deleted = await DeleteProduct(id);
     setProducts(deleted);
+    toast.success("Deleted");
   };
 
   const filteredProducts = products.filter(
