@@ -17,8 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useRecoilState } from "recoil";
 import { cartItemState } from "@/recoil/atom";
-import { useRouter } from "next/router";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+
 import { addOrder } from "@/actions/order";
 import { toast } from "react-toastify";
 
@@ -35,8 +35,10 @@ export default function Checkout() {
     zipCode: "",
   });
 
+  const router = useRouter();
+
   if (cartItems.length === 0) {
-    redirect("/");
+    router.push("/");
   }
 
   const totalItems = cartItems.reduce(

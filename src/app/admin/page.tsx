@@ -1,3 +1,3 @@
 export default function () {
-  return <div> this is the Dashboard</div>;
+  return <div suppressHydrationWarning> this is the Dashboard</div>;
 }

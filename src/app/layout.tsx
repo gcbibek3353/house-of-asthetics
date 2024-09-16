@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <Provider>
-        <body className=" overflow-x-hidden">
+        <body className=" overflow-x-hidden" suppressHydrationWarning>
           <Cart />
           {children}
 
