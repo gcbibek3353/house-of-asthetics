@@ -61,7 +61,7 @@ export default function FeaturedProducts() {
                   <img
                     src={product.imageUrl}
                     alt={product.name}
-                    className="rounded-md object-cover"
+                    className="absolute inset-0 w-full h-full object-cover rounded-md"
                   />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -73,6 +73,7 @@ export default function FeaturedProducts() {
                   </p>
                 </div>
               </CardContent>
+
               <CardFooter className="p-4">
                 <Button
                   className="w-full"

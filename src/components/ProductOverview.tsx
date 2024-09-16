@@ -46,11 +46,11 @@ export default function ProductOverview({ product, products }: any) {
     <div className="container mx-auto px-4 py-8">
       <Card className="mb-8">
         <div className="grid md:grid-cols-2 gap-6">
-          <AspectRatio ratio={1 / 1} className="bg-muted">
+          <AspectRatio ratio={1 / 1} className="relative bg-muted">
             <img
               src={pro.imageUrl}
               alt={pro.name || "Product Image"}
-              className="rounded-md object-cover"
+              className="w-full h-full object-cover rounded-md"
             />
           </AspectRatio>
           <div className="flex flex-col justify-center p-6">
@@ -87,10 +87,11 @@ export default function ProductOverview({ product, products }: any) {
                   <img
                     src={product.imageUrl}
                     alt={product.name || `Related Product ${product.id}`}
-                    className="object-cover"
+                    className="w-full h-full object-cover rounded-md"
                   />
                 </AspectRatio>
               </CardHeader>
+
               <CardContent className="p-4">
                 <CardTitle className="text-lg">{product.name}</CardTitle>
                 <p className="text-sm text-muted-foreground">
