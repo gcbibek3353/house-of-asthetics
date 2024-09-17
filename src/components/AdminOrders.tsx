@@ -246,7 +246,7 @@ export default function AdminOrders() {
               <p>Phone: {selectedOrder.phone}</p>
               <p>Address: {selectedOrder.address}</p>
               <p>City: {selectedOrder.city}</p>
-              <p>ZipCode: {selectedOrder.ZipCode}</p>
+              <p>ZipCode: {selectedOrder.zipcode}</p>
               <p>Total: ${selectedOrder.total.toFixed(2)}</p>
               <h4 className="font-semibold mt-2">Items:</h4>
               <ul className="list-disc pl-5 space-y-4">
