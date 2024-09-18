@@ -15,6 +15,7 @@ import { ShoppingCart } from "lucide-react";
 import { useRecoilState } from "recoil";
 import { cartItemState, cartState } from "@/recoil/atom";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function ProductOverview({ product, products }: any) {
   const pro = product;
@@ -93,10 +94,17 @@ export default function ProductOverview({ product, products }: any) {
               </CardHeader>
 
               <CardContent className="p-4">
-                <CardTitle className="text-lg">{product.name}</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  {product.description || "Brief product description"}
-                </p>
+                <CardTitle className="text-lg">
+                  <Link href={`/products/${product.id}`}>{product.name}</Link>
+                </CardTitle>
+                {/* <p className="text-sm text-muted-foreground">
+                  {product.description
+                    ? product.description.split(" ").length > 15
+                      ? product.description.split(" ").slice(0, 15).join(" ") +
+                        "..."
+                      : product.description
+                    : "Brief product description"}
+                </p> */}
               </CardContent>
               <CardFooter className="p-4">
                 <Badge variant="secondary" className="w-full justify-center">

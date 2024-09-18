@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cartItemState, cartState } from "@/recoil/atom";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
@@ -65,11 +66,11 @@ export default function FeaturedProducts() {
                   />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {product.name}
+                  <Link href={`products/${product.id}`}>{product.name}</Link>
                 </h3>
                 <div className="flex justify-between items-center">
                   <p className="text-gray-700 font-bold">
-                    ${product.price.toFixed(2)}
+                    Rs.{product.price.toFixed(2)}
                   </p>
                 </div>
               </CardContent>

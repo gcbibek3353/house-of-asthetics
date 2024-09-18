@@ -103,7 +103,7 @@ export default function ProductsPage() {
                   <h2 className="text-lg font-semibold">
                     <Link href={`/products/${product.id}`}>{product.name}</Link>
                   </h2>
-                  <p className="text-gray-600">${product.price.toFixed(2)}</p>
+                  <p className="text-gray-600">Rs.{product.price.toFixed(2)}</p>
                   <p className="text-sm text-gray-500 mt-2">
                     {product.category}
                   </p>
