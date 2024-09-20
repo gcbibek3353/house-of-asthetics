@@ -29,18 +29,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/categories"
-                  className="hover:text-gray-600 transition-colors"
-                >
+                <Link href="" className="hover:text-gray-600 transition-colors">
                   Categories
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/sale"
-                  className="hover:text-gray-600 transition-colors"
-                >
+                <Link href="" className="hover:text-gray-600 transition-colors">
                   Sale
                 </Link>
               </li>
@@ -60,26 +54,17 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/shipping"
-                  className="hover:text-gray-600 transition-colors"
-                >
+                <Link href="" className="hover:text-gray-600 transition-colors">
                   Shipping Info
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/returns"
-                  className="hover:text-gray-600 transition-colors"
-                >
+                <Link href="" className="hover:text-gray-600 transition-colors">
                   Returns & Exchanges
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/faq"
-                  className="hover:text-gray-600 transition-colors"
-                >
+                <Link href="" className="hover:text-gray-600 transition-colors">
                   FAQ
                 </Link>
               </li>
@@ -99,26 +84,17 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/blog"
-                  className="hover:text-gray-600 transition-colors"
-                >
+                <Link href="" className="hover:text-gray-600 transition-colors">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/careers"
-                  className="hover:text-gray-600 transition-colors"
-                >
+                <Link href="" className="hover:text-gray-600 transition-colors">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/privacy"
-                  className="hover:text-gray-600 transition-colors"
-                >
+                <Link href="" className="hover:text-gray-600 transition-colors">
                   Privacy Policy
                 </Link>
               </li>

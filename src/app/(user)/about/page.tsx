@@ -2,16 +2,11 @@ import { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export const metadata: Metadata = {
-  title: "About Us | Your Ecommerce Store",
-  description: "Learn about our company, our mission, and our history.",
-};
-
 export default function AboutPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center">
-        House Of Asthetics
+        House Of Aesthetics
       </h1>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
@@ -71,7 +66,7 @@ export default function AboutPage() {
             <li>
               <strong>Quality:</strong> Our commitment to excellence means we
               offer only the finest, high-quality products that meet our
-              customers' expectations.
+              customers&#39; expectations.
             </li>
             <li>
               <strong>Integrity:</strong> We conduct our business with honesty,
