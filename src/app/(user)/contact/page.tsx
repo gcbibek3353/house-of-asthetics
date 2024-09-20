@@ -100,7 +100,7 @@ export default function ContactPage() {
               </div>
               <div className="flex items-center space-x-2">
                 <MailIcon className="h-5 w-5 text-gray-500" />
-                <p>contact@houseofasthetics.com</p>
+                <p>houseofaesthetics154@gmail.com</p>
               </div>
               <div className="flex items-center space-x-2">
                 <ClockIcon className="h-5 w-5 text-gray-500" />

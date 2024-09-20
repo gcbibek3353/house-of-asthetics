@@ -124,14 +124,16 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-300 flex flex-col sm:flex-row justify-between items-center">
           <div className="flex space-x-6 mb-4 sm:mb-0">
             <a
-              href="#"
+              href=""
               className="text-gray-600 hover:text-gray-800 transition-colors"
             >
               <Facebook size={24} />
               <span className="sr-only">Facebook</span>
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/houseofaesthetics____/"
+              rel="noopener noreferrer"
+              target="_blank"
               className="text-gray-600 hover:text-gray-800 transition-colors"
             >
               <Instagram size={24} />
@@ -146,7 +148,7 @@ export default function Footer() {
             </a>
           </div>
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} Your E-commerce Store. All rights
+            © {new Date().getFullYear()} House-of-aesthetics. All rights
             reserved.
           </p>
         </div>

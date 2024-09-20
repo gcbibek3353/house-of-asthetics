@@ -16,13 +16,13 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              House of Aesthetics was founded in 2024 with a passion for
-              delivering beautifully crafted, high-quality aesthetic products.
-              Specializing in elegant earrings, bracelets, and timeless
-              accessories, we are committed to offering a seamless shopping
-              experience and exceptional customer service. Let our curated
-              collection inspire your unique style and elevate your everyday
-              look.
+              House of Aesthetics was founded in 2024 by Tenzin Gawa with a
+              passion for delivering beautifully crafted, high-quality aesthetic
+              products. Specializing in elegant earrings, bracelets, and
+              timeless accessories, we are committed to offering a seamless
+              shopping experience and exceptional customer service. Let our
+              curated collection inspire your unique style and elevate your
+              everyday look.
             </p>
           </CardContent>
         </Card>

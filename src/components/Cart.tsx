@@ -89,7 +89,7 @@ export default function Cart() {
                   <h3 className="font-semibold">{item.name}</h3>
                 </Link>
                 <p className="text-sm text-gray-500">
-                  ${item.price.toFixed(2)}
+                  Rs.{item.price.toFixed(2)}
                 </p>
                 <div className="flex items-center mt-2">
                   <Button
@@ -118,7 +118,7 @@ export default function Cart() {
                 </div>
               </div>
               <p className="font-semibold">
-                ${(item.price * item.quantity).toFixed(2)}
+                Rs.{(item.price * item.quantity).toFixed(2)}
               </p>
             </div>
           ))}
@@ -126,7 +126,7 @@ export default function Cart() {
         <Separator className="my-4" />
         <div className="flex justify-between items-center font-semibold text-lg">
           <span>Total:</span>
-          <span>${totalPrice.toFixed(2)}</span>
+          <span>Rs.{totalPrice.toFixed(2)}</span>
         </div>
         <Link href={"/checkout"}>
           <Button

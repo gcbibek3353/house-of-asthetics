@@ -1,11 +1,29 @@
 "use client";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import image from "@/images/hero-image.jpg";
 import Link from "next/link";
 
+// Assuming you have three images imported
+import image1 from "@/images/hero-image3.jpg";
+import image2 from "@/images/hero-image2.jpg";
+import image3 from "@/images/hero-image1.jpg";
+import image4 from "@/images/hero-image4.jpg";
+
 export default function HeroPage() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = [image1, image2, image3, image4];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div
       className="bg-gradient-to-r from-purple-50 to-pink-50 min-h-[calc(100vh-64px)] flex items-center"
@@ -20,7 +38,7 @@ export default function HeroPage() {
             Explore our curated collection of trendsetting fashion pieces that
             define your unique personality.
           </p>
-          <Link href={"/products"}>
+          <Link href="/products">
             <Button
               className="animate-fade-in-up animation-delay-400 group"
               size="lg"
@@ -30,15 +48,21 @@ export default function HeroPage() {
             </Button>
           </Link>
         </div>
-        <div className="lg:w-1/2 relative">
+        <div className="lg:w-1/2 relative h-[500px]">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-200 to-pink-200 rounded-full blur-3xl opacity-30 animate-pulse"></div>
-          <Image
-            src={image}
-            alt="Featured Product"
-            width={500}
-            height={500}
-            className="relative rounded-lg shadow-2xl animate-float"
-          />
+          {images.map((image, index) => (
+            <Image
+              key={index}
+              src={image}
+              alt={`Featured Product ${index + 1}`}
+              width={500}
+              height={500} // Change from 'fill' to width and height
+              className={`absolute top-0 left-0 rounded-lg shadow-2xl transition-opacity duration-1000 ${
+                index === currentImageIndex ? "opacity-100" : "opacity-0"
+              }`}
+              style={{ objectFit: "contain" }} // Ensures the whole image is visible
+            />
+          ))}
         </div>
       </div>
     </div>
