@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingCart, User, Search, Menu, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -16,17 +16,45 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function Navbar() {
+interface Product {
+  id: string;
+  name: string;
+  imageUrl: string;
+  price: number;
+}
+
+export default function Navbar({ products }: { products: Product[] }) {
   const [isCartOpen, setIsCartOpen] = useRecoilState(cartState);
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const totalItems = cartItems.reduce(
-    (sum: any, item: any) => sum + item.quantity,
+    (sum: number, item: any) => sum + item.quantity,
     0
   );
 
   const categories = ["Bracelet", "Earring", "Clip"];
+
+  useEffect(() => {
+    if (searchTerm.length > 0) {
+      setIsSearching(true);
+      const results = products.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setSearchResults(results.slice(0, 5)); // Limit to 5 results
+    } else {
+      setIsSearching(false);
+      setSearchResults([]);
+    }
+  }, [searchTerm, products]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // You can add additional search logic here if needed
+  };
 
   return (
     <nav className="bg-white shadow-md z-40" suppressHydrationWarning>
@@ -96,18 +124,54 @@ export default function Navbar() {
           </div>
           <div className="hidden md:block">
             <div className="flex items-center">
-              <form className="mr-4">
+              <form onSubmit={handleSearch} className="mr-4 relative">
                 <div className="relative">
                   <Input
                     type="search"
                     placeholder="Search products..."
                     className="w-64 pl-10"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                   <Search
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                     size={18}
                   />
                 </div>
+                {isSearching && (
+                  <div className="absolute mt-2 w-full bg-white rounded-md shadow-lg z-10">
+                    {searchResults.length > 0 ? (
+                      searchResults.map((product) => (
+                        <Link
+                          key={product.id}
+                          href={`/products/${product.id}`}
+                          className="flex items-center px-4 py-2 hover:bg-gray-100"
+                          onClick={() => setSearchTerm("")}
+                        >
+                          <img
+                            src={product.imageUrl}
+                            alt={product.name}
+                            width={40}
+                            height={40}
+                            className="rounded-md mr-3"
+                          />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">
+                              {product.name}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              ${product.price.toFixed(2)}
+                            </p>
+                          </div>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-sm text-gray-700">
+                        No results found
+                      </div>
+                    )}
+                  </div>
+                )}
               </form>
               <Button
                 onClick={() => {
@@ -207,18 +271,57 @@ export default function Navbar() {
               </Button>
             </div>
             <div className="mt-3 px-2">
-              <form>
+              <form onSubmit={handleSearch}>
                 <div className="relative">
                   <Input
                     type="search"
                     placeholder="Search products..."
                     className="w-full pl-10"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                   <Search
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                     size={18}
                   />
                 </div>
+                {isSearching && (
+                  <div className="absolute mt-2 w-full bg-white rounded-md shadow-lg z-10">
+                    {searchResults.length > 0 ? (
+                      searchResults.map((product) => (
+                        <Link
+                          key={product.id}
+                          href={`/products/${product.id}`}
+                          className="flex items-center px-4 py-2 hover:bg-gray-100"
+                          onClick={() => {
+                            setSearchTerm("");
+                            setIsMenuOpen(false);
+                          }}
+                        >
+                          <img
+                            src={product.imageUrl}
+                            alt={product.name}
+                            width={40}
+                            height={40}
+                            className="rounded-md mr-3"
+                          />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">
+                              {product.name}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              ${product.price.toFixed(2)}
+                            </p>
+                          </div>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-sm text-gray-700">
+                        No results found
+                      </div>
+                    )}
+                  </div>
+                )}
               </form>
             </div>
           </div>

@@ -1,12 +1,14 @@
-"use client";
 import Image from "next/image";
 import HeroPage from "@/components/HeroPage";
 import Navbar from "@/components/Navbar";
 import FeaturedProducts from "@/components/FeatureProducts";
-export default function Home() {
+import { GetAllProducts } from "@/actions/product";
+export default async function Home() {
+  const products: any = await GetAllProducts();
+
   return (
     <div suppressHydrationWarning>
-      <Navbar />
+      <Navbar products={products} />
 
       <HeroPage />
 
