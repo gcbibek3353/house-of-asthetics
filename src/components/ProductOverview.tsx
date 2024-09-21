@@ -16,11 +16,13 @@ import { useRecoilState } from "recoil";
 import { cartItemState, cartState } from "@/recoil/atom";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ProductOverview({ product, products }: any) {
   const pro = product;
   const [isCartOpen, setIsCartOpen] = useRecoilState(cartState);
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
+  const router = useRouter();
 
   // Handle add to cart button
   const handleAddToCart = (product: any) => {
@@ -41,6 +43,25 @@ export default function ProductOverview({ product, products }: any) {
       // Otherwise, add the product to the cart
       setCartItems([...cartItems, { ...product, quantity: 1 }]);
     }
+  };
+  const handelBuyNow = (product: any) => {
+    const existingProduct = cartItems.find(
+      (item: any) => item.id === product.id
+    );
+    if (existingProduct) {
+      // If the product is already in the cart, just increase its quantity
+      setCartItems(
+        cartItems.map((item: any) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      // Otherwise, add the product to the cart
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+    router.push("/checkout");
   };
 
   return (
@@ -64,10 +85,16 @@ export default function ProductOverview({ product, products }: any) {
             </CardContent>
             <CardFooter>
               <Button
-                className="w-full md:w-auto"
+                className="w-full md:w-auto mr-2"
                 onClick={() => handleAddToCart(pro)}
               >
                 <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+              </Button>
+              <Button
+                className="w-full md:w-auto ml-2"
+                onClick={() => handelBuyNow(pro)}
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
               </Button>
             </CardFooter>
           </div>

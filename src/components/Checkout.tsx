@@ -196,7 +196,7 @@ export default function Checkout() {
                   <div className="flex-1">
                     <h3 className="font-semibold">{item.name}</h3>
                     <p className="text-sm text-gray-500">
-                      ${item.price.toFixed(2)} x {item.quantity}
+                      Rs. {item.price.toFixed(2)} x {item.quantity}
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -231,7 +231,7 @@ export default function Checkout() {
             <CardFooter className="flex-col space-y-2">
               <div className="flex justify-between w-full">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>Rs. {subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between w-full">
                 <span>Delivery</span>
@@ -240,7 +240,7 @@ export default function Checkout() {
               <Separator className="my-2" />
               <div className="flex justify-between w-full text-lg font-semibold">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>Rs. {total.toFixed(2)}</span>
               </div>
             </CardFooter>
           </Card>
