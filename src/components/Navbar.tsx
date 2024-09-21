@@ -162,7 +162,7 @@ export default function Navbar() {
                 {categories.map((category) => (
                   <Link
                     key={category}
-                    href={`/products/${category
+                    href={`/category/${category
                       .toLowerCase()
                       .replace(" & ", "-")}`}
                     className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-sm font-medium"
