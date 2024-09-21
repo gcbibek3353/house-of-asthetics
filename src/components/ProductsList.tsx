@@ -8,8 +8,11 @@ import { useRecoilState } from "recoil";
 import { cartItemState, cartState } from "@/recoil/atom";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const ProductsList = ({ products }: any) => {
+  const router = useRouter();
+
   const [sortBy, setSortBy] = useState("name");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
@@ -46,6 +49,25 @@ const ProductsList = ({ products }: any) => {
     indexOfFirstProduct,
     indexOfLastProduct
   );
+  const handelBuyNow = (product: any) => {
+    const existingProduct = cartItems.find(
+      (item: any) => item.id === product.id
+    );
+    if (existingProduct) {
+      // If the product is already in the cart, just increase its quantity
+      setCartItems(
+        cartItems.map((item: any) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      // Otherwise, add the product to the cart
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+    router.push("/checkout");
+  };
 
   const pageNumbers = [];
   for (
@@ -69,17 +91,23 @@ const ProductsList = ({ products }: any) => {
               />
 
               <h2 className="text-lg font-semibold">
-                <Link href={`products/${product.id}`}>{product.name}</Link>
+                <Link href={`/products/${product.id}`}>{product.name}</Link>
               </h2>
               <p className="text-gray-600">Rs.{product.price.toFixed(2)}</p>
               <p className="text-sm text-gray-500 mt-2">{product.category}</p>
             </CardContent>
             <CardFooter className="p-4">
               <Button
-                className="w-full"
+                className="w-full mr-2"
                 onClick={() => handleAddToCart(product)}
               >
                 Add to Cart
+              </Button>
+              <Button
+                className="w-full ml-2"
+                onClick={() => handelBuyNow(product)}
+              >
+                Buy Now
               </Button>
             </CardFooter>
           </Card>

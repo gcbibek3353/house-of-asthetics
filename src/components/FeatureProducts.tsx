@@ -6,6 +6,7 @@ import { cartItemState, cartState } from "@/recoil/atom";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
@@ -14,6 +15,7 @@ export default function FeaturedProducts() {
   const [isCartOpen, setIsCartOpen] = useRecoilState(cartState);
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
   const [featuredProducts, setfeaturedProducts] = useState<any>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetch = async () => {
@@ -22,6 +24,26 @@ export default function FeaturedProducts() {
     };
     fetch();
   }, []);
+
+  const handelBuyNow = (product: any) => {
+    const existingProduct = cartItems.find(
+      (item: any) => item.id === product.id
+    );
+    if (existingProduct) {
+      // If the product is already in the cart, just increase its quantity
+      setCartItems(
+        cartItems.map((item: any) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      // Otherwise, add the product to the cart
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+    router.push("/checkout");
+  };
 
   // Handle add to cart button
   const handleAddToCart = (product: any) => {
@@ -77,10 +99,16 @@ export default function FeaturedProducts() {
 
               <CardFooter className="p-4">
                 <Button
-                  className="w-full"
+                  className="w-full mr-2"
                   onClick={() => handleAddToCart(product)}
                 >
                   Add to Cart
+                </Button>
+                <Button
+                  className="w-full ml-2"
+                  onClick={() => handelBuyNow(product)}
+                >
+                  Buy Now
                 </Button>
               </CardFooter>
             </Card>
