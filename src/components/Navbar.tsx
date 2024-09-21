@@ -29,7 +29,7 @@ export default function Navbar() {
   const categories = ["Bracelet", "Earring", "Clip"];
 
   return (
-    <nav className="bg-white shadow-md" suppressHydrationWarning>
+    <nav className="bg-white shadow-md z-40" suppressHydrationWarning>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -57,7 +57,7 @@ export default function Navbar() {
                   >
                     Products <ChevronDown className="ml-1 h-4 w-4" />
                   </Link>
-                  <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
+                  <div className="absolute left-0 mt-2 w-48 z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
                     <div
                       className="py-1"
                       role="menu"
