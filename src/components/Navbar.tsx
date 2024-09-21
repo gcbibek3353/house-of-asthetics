@@ -16,19 +16,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-interface Product {
-  id: string;
-  name: string;
-  imageUrl: string;
-  price: number;
-}
-
-export default function Navbar({ products }: { products: Product[] }) {
+export default function Navbar({ products }: any) {
   const [isCartOpen, setIsCartOpen] = useRecoilState(cartState);
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [searchResults, setSearchResults] = useState<any>([]);
   const [isSearching, setIsSearching] = useState(false);
 
   const totalItems = cartItems.reduce(
@@ -41,7 +34,7 @@ export default function Navbar({ products }: { products: Product[] }) {
   useEffect(() => {
     if (searchTerm.length > 0) {
       setIsSearching(true);
-      const results = products.filter((product) =>
+      const results = products.filter((product: any) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setSearchResults(results.slice(0, 5)); // Limit to 5 results
@@ -141,7 +134,7 @@ export default function Navbar({ products }: { products: Product[] }) {
                 {isSearching && (
                   <div className="absolute mt-2 w-full bg-white rounded-md shadow-lg z-10">
                     {searchResults.length > 0 ? (
-                      searchResults.map((product) => (
+                      searchResults.map((product: any) => (
                         <Link
                           key={product.id}
                           href={`/products/${product.id}`}
@@ -288,7 +281,7 @@ export default function Navbar({ products }: { products: Product[] }) {
                 {isSearching && (
                   <div className="absolute mt-2 w-full bg-white rounded-md shadow-lg z-10">
                     {searchResults.length > 0 ? (
-                      searchResults.map((product) => (
+                      searchResults.map((product: any) => (
                         <Link
                           key={product.id}
                           href={`/products/${product.id}`}
