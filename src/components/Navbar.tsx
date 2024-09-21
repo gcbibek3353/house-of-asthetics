@@ -1,13 +1,20 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, User, Search, Menu } from "lucide-react";
+import { ShoppingCart, User, Search, Menu, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import image from "@/images/logo.jpg";
 import { useRecoilState } from "recoil";
 import { cartItemState, cartState } from "@/recoil/atom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const [isCartOpen, setIsCartOpen] = useRecoilState(cartState);
@@ -18,6 +25,8 @@ export default function Navbar() {
     (sum: any, item: any) => sum + item.quantity,
     0
   );
+
+  const categories = ["Bracelet", "Earring", "Clip"];
 
   return (
     <nav className="bg-white shadow-md" suppressHydrationWarning>
@@ -41,12 +50,35 @@ export default function Navbar() {
                 >
                   Home
                 </Link>
-                <Link
-                  href="/products"
-                  className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Products
-                </Link>
+                <div className="relative group">
+                  <Link
+                    href="/products"
+                    className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium inline-flex items-center"
+                  >
+                    Products <ChevronDown className="ml-1 h-4 w-4" />
+                  </Link>
+                  <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out">
+                    <div
+                      className="py-1"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      {categories.map((category) => (
+                        <Link
+                          key={category}
+                          href={`/category/${category
+                            .toLowerCase()
+                            .replace(" & ", "-")}`}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                          role="menuitem"
+                        >
+                          {category}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
                 <Link
                   href="/about"
                   className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
@@ -118,13 +150,29 @@ export default function Navbar() {
             >
               Home
             </Link>
-            <Link
-              href="/products"
-              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Products
-            </Link>
+            <div>
+              <Link
+                href="/products"
+                className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Products
+              </Link>
+              <div className="pl-4">
+                {categories.map((category) => (
+                  <Link
+                    key={category}
+                    href={`/products/${category
+                      .toLowerCase()
+                      .replace(" & ", "-")}`}
+                    className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-sm font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {category}
+                  </Link>
+                ))}
+              </div>
+            </div>
             <Link
               href="/about"
               className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"

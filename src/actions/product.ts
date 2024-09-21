@@ -1,6 +1,7 @@
 "use server"
 
 import prisma from "@/db"
+import { Brackets } from "lucide-react";
 
 interface ProductParams {
     name: string;
@@ -86,5 +87,25 @@ export async function ProductCreate(params: ProductParams) {
     } catch (e) {
         console.log(e);
         return { message: "An error occurred while creating the product", error: e };
+    }
+}
+
+function capitalizeFirstLetter(string:string) {
+    if (!string) return string; // Return if the string is empty
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+export async function GetProductByCat(category:string) {
+    try{
+       
+        const products = await prisma.product.findMany({
+            where:{
+                category:capitalizeFirstLetter(category)
+            }
+        })
+        console.log(products)
+        return products
+    }catch (e) {
+        console.log(e);
+        return { message: "An error occurred while getting products", error: e };
     }
 }
