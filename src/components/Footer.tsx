@@ -47,59 +47,32 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/contact"
+                  href="/privacy-policy"
                   className="hover:text-gray-600 transition-colors"
                 >
-                  Contact Us
+                  Privacy-policy
                 </Link>
               </li>
               <li>
-                <Link href="" className="hover:text-gray-600 transition-colors">
+                <Link href="/shipping-policy" className="hover:text-gray-600 transition-colors">
                   Shipping Info
                 </Link>
               </li>
               <li>
-                <Link href="" className="hover:text-gray-600 transition-colors">
+                <Link href="/refund-and-cancellation" className="hover:text-gray-600 transition-colors">
                   Returns & Exchanges
                 </Link>
               </li>
               <li>
-                <Link href="" className="hover:text-gray-600 transition-colors">
-                  FAQ
+                <Link href="/terms-and-conditions" className="hover:text-gray-600 transition-colors">
+                  Terms & Conditions
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* About */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">About Us</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:text-gray-600 transition-colors"
-                >
-                  Our Story
-                </Link>
-              </li>
-              <li>
-                <Link href="" className="hover:text-gray-600 transition-colors">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="" className="hover:text-gray-600 transition-colors">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="" className="hover:text-gray-600 transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
+          
 
           {/* Newsletter Signup */}
           <div>
