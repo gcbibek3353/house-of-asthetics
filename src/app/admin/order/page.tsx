@@ -1,9 +1,11 @@
+import { fetchOrders } from "@/actions/order";
 import AdminOrders from "@/components/AdminOrders";
 
-export default function () {
+export  default async function () {
+  const product = await fetchOrders();
   return (
     <div>
-      <AdminOrders />
+      <AdminOrders products = {product} />
     </div>
   );
 }

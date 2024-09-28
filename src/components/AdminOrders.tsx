@@ -30,7 +30,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -45,7 +44,6 @@ import {
   MoreVertical,
   Search,
   Filter,
-  Plus,
 } from "lucide-react";
 import { fetchOrders, updateOrderStatus } from "@/actions/order";
 import Link from "next/link";
@@ -53,21 +51,17 @@ import { toast } from "react-toastify";
 
 const statusOptions = ["processing", "cancelled", "shipped", "delivered"];
 
-export default function AdminOrders() {
+export default function AdminOrders({ products }: any) {
   const [orders, setOrders] = useState<any>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isAddOrderOpen, setIsAddOrderOpen] = useState(false);
 
+  // Set orders based on products when the component mounts or products change
   useEffect(() => {
-    const fetchOrder = async () => {
-      const product = await fetchOrders();
-      setOrders(product);
-      console.log(product);
-    };
-    fetchOrder();
-  }, []);
+    setOrders(products);
+  }, [products]);
 
   const filteredOrders = orders.filter(
     (order: any) =>
@@ -80,23 +74,22 @@ export default function AdminOrders() {
     (sum: any, order: any) => sum + order.total,
     0
   );
-  const averageOrderValue = totalRevenue / orders.length;
+  const averageOrderValue = totalRevenue / orders.length || 0; // Prevent division by zero
 
   const handleStatusChange = async (orderId: any, newStatus: any) => {
-    const orders = await updateOrderStatus({ orderId, status: newStatus });
-    setOrders(orders);
+    const updatedOrders = await updateOrderStatus({ orderId, status: newStatus });
+    setOrders(updatedOrders);
     toast.success("Status Updated");
     setSelectedOrder(null);
   };
 
   const handleAddOrder = (newOrder: any) => {
-    setOrders([
-      ...orders,
-      { ...newOrder, id: `ORD${orders.length + 1}`.padStart(6, "0") },
+    setOrders((prevOrders:any) => [
+      ...prevOrders,
+      { ...newOrder, id: `ORD${prevOrders.length + 1}`.padStart(6, "0") },
     ]);
     setIsAddOrderOpen(false);
   };
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Order Management</h1>
