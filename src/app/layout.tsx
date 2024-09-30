@@ -8,6 +8,7 @@ import { Provider } from "./provider";
 import "react-toastify/dist/ReactToastify.css";
 import Cart from "@/components/Cart";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "House of asthetics",
@@ -27,6 +28,7 @@ export default function RootLayout({
     id="razorpay-checkout-js"
     src="https://checkout.razorpay.com/v1/checkout.js"
    />
+          <Analytics/>
           <NextTopLoader />
           <Cart />
           {children}
