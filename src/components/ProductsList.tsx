@@ -9,15 +9,33 @@ import { cartItemState, cartState } from "@/recoil/atom";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GetAllProducts } from "@/actions/product";
 
-const ProductsList = ({ products }: any) => {
+const ProductsList = () => {
   const router = useRouter();
-
+  const [products, setProducts] = useState<any[]>([]); 
   const [sortBy, setSortBy] = useState("name");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
   const [isCartOpen, setIsCartOpen] = useRecoilState(cartState);
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
+
+
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        // Simulated API call to fetch products
+        const response:any = await GetAllProducts(); // Replace with your API call
+        setProducts(response);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+
 
   const handleAddToCart = (product: any) => {
     const existingProduct = cartItems.find(
@@ -36,6 +54,8 @@ const ProductsList = ({ products }: any) => {
       setCartItems([...cartItems, { ...product, quantity: 1 }]);
     }
   };
+
+  //use use effect to fetch products GetAllProducts   actions
 
   const sortedProducts = [...products].sort((a, b) => {
     if (sortBy === "price") return a.price - b.price;
