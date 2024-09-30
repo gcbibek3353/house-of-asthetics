@@ -52,6 +52,10 @@ export default function Checkout() {
 
   const total = subtotal;
 
+
+
+  
+
   const updateQuantity = (id: number, change: number) => {
     setCartItems((items: any) =>
       items
@@ -77,7 +81,7 @@ export default function Checkout() {
     console.log(cartItems);
     console.log("Billing Details: ", billingDetails);
     const { name, email, phone, address, city, zipCode } = billingDetails;
-    const added = await addOrder({
+    const added :any= await addOrder({
       name,
       email,
       phone,
@@ -88,6 +92,30 @@ export default function Checkout() {
     });
 
     setCartItems([]);
+
+    const createOrderId = async () => {
+      try {
+       const response = await fetch('/api/order', {
+        method: 'POST',
+        headers: {
+         'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+         amount: parseFloat(added?.price)*100,
+        })
+       });
+    
+       if (!response.ok) {
+        throw new Error('Network response was not ok');
+       }
+    
+       const data = await response.json();
+       return data.orderId;
+      } catch (error) {
+       console.error('There was a problem with your fetch operation:', error);
+      }
+     };
+
 
     toast.success("Order is placed");
   };

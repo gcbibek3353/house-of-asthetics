@@ -18,36 +18,42 @@ import {
 
 export default function Navbar({ products }: any) {
   const [isCartOpen, setIsCartOpen] = useRecoilState(cartState);
-  const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<any>([]);
-  const [isSearching, setIsSearching] = useState(false);
+const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
+const [isMenuOpen, setIsMenuOpen] = useState(false);
+const [searchTerm, setSearchTerm] = useState("");
+const [searchResults, setSearchResults] = useState<any>([]);
+const [isSearching, setIsSearching] = useState(false);
+const [categories, setCategories] = useState<string[]>([]);
 
-  const totalItems = cartItems.reduce(
-    (sum: number, item: any) => sum + item.quantity,
-    0
-  );
+const totalItems = cartItems.reduce(
+  (sum: number, item: any) => sum + item.quantity,
+  0
+);
 
-  const categories = ["Bracelet", "Earring", "Clip"];
+// Extract categories from products and update the categories state
+useEffect(() => {
+  const uniqueCategories :any = Array.from(new Set(products.map((product: any) => product.category)));
+  setCategories(uniqueCategories);
+}, [products]);
 
-  useEffect(() => {
-    if (searchTerm.length > 0) {
-      setIsSearching(true);
-      const results = products.filter((product: any) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setSearchResults(results.slice(0, 5)); // Limit to 5 results
-    } else {
-      setIsSearching(false);
-      setSearchResults([]);
-    }
-  }, [searchTerm, products]);
+useEffect(() => {
+  if (searchTerm.length > 0) {
+    setIsSearching(true);
+    const results = products.filter((product: any) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setSearchResults(results.slice(0, 5)); // Limit to 5 results
+  } else {
+    setIsSearching(false);
+    setSearchResults([]);
+  }
+}, [searchTerm, products]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // You can add additional search logic here if needed
-  };
+const handleSearch = (e: React.FormEvent) => {
+  e.preventDefault();
+  // You can add additional search logic here if needed
+};
+
 
   return (
     <nav className="bg-white shadow-md z-40" suppressHydrationWarning>

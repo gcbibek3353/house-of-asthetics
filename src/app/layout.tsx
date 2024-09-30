@@ -7,6 +7,7 @@ import { RecoilRoot } from "recoil";
 import { Provider } from "./provider";
 import "react-toastify/dist/ReactToastify.css";
 import Cart from "@/components/Cart";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "House of asthetics",
@@ -22,6 +23,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <Provider>
         <body className=" overflow-x-hidden" suppressHydrationWarning>
+        <Script
+    id="razorpay-checkout-js"
+    src="https://checkout.razorpay.com/v1/checkout.js"
+   />
           <NextTopLoader />
           <Cart />
           {children}
