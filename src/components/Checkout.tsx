@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { CreditCard, Trash2 } from "lucide-react";
+import { Banknote, CreditCard, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,10 +22,12 @@ import { useRouter } from "next/navigation";
 import { addOrder, calculateCartTotal } from "@/actions/order";
 import { toast } from "react-toastify";
 import Razorpay from "razorpay";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 export default function Checkout() {
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
   const [loading, setLoading] = useState(false)
+  const [mode, setMode] = useState("COD")
 
   // Initialize state for billing details
   const [billingDetails, setBillingDetails] = useState({
@@ -101,61 +103,68 @@ export default function Checkout() {
 
   const processPayment = async (e: any) => {
     e.preventDefault();
-    try {
-      setLoading(true)
-      const amount = await calculateCartTotal(cartItems)
-      const orderId: string = await createOrderId(amount);
-      const options = {
-        key: process.env.KEY_ID,
-        amount: parseFloat(amount!) * 100,
-        currency: "INR",
-        name: billingDetails.name,
-        order_id: orderId,
-        handler: async function (response: any) {
-          const data = {
-            orderCreationId: orderId,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpayOrderId: response.razorpay_order_id,
-            razorpaySignature: response.razorpay_signature,
-          };
+    if (mode == "COD") {
+      handleSubmit(false)
+    }
+    else {
 
-          const result = await fetch('/api/verify', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: { 'Content-Type': 'application/json' },
-          });
-          const res = await result.json();
-          if (res.isOk) {
-            setLoading(false)
-            handleSubmit()
-          }
-          else {
-            alert(res.message);
-          }
-        },
-        prefill: {
+      try {
+        setLoading(true)
+        const amount = await calculateCartTotal(cartItems)
+        const orderId: string = await createOrderId(amount);
+        const options = {
+          key: process.env.KEY_ID,
+          amount: parseFloat(amount!) * 100,
+          currency: "INR",
           name: billingDetails.name,
-          email: billingDetails.email,
-        },
-        theme: {
-          color: '#3399cc',
-        },
-      };
+          order_id: orderId,
+          handler: async function (response: any) {
+            const data = {
+              orderCreationId: orderId,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+            };
+
+            const result = await fetch('/api/verify', {
+              method: 'POST',
+              body: JSON.stringify(data),
+              headers: { 'Content-Type': 'application/json' },
+            });
+            const res = await result.json();
+            if (res.isOk) {
+              handleSubmit(true)
+            }
+            else {
+              alert(res.message);
+            }
+          },
+          prefill: {
+            name: billingDetails.name,
+            email: billingDetails.email,
+          },
+          theme: {
+            color: '#3399cc',
+          },
+        };
 
 
 
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.on('payment.failed', function (response: any) {
-        alert(response.error.description);
-      });
-      paymentObject.open();
-    } catch (error) {
-      console.log(error);
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.on('payment.failed', function (response: any) {
+          alert(response.error.description);
+        });
+        paymentObject.open();
+        setLoading(false)
+
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (paid: boolean) => {
 
     console.log(cartItems);
     console.log("Billing Details: ", billingDetails);
@@ -166,6 +175,7 @@ export default function Checkout() {
       phone,
       address,
       city,
+      paid,
       zipcode: zipCode,
       product: cartItems,
     });
@@ -253,7 +263,27 @@ export default function Checkout() {
                     onChange={handleChange}
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="zipCode">Mode Of Payment</Label>
+                  <RadioGroup value={mode} onValueChange={setMode}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="COD" id="cod" />
+                      <Label htmlFor="cod" className="flex items-center cursor-pointer">
+                        <Banknote className="mr-2 h-4 w-4" />
+                        Cash on Delivery (COD)
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="ONLINE" id="online" />
+                      <Label htmlFor="online" className="flex items-center cursor-pointer">
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Online Payment
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
               </div>
+
             </CardContent>
             <CardFooter>
               <Button type="submit" className="w-full mt-4">

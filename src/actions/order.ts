@@ -11,6 +11,7 @@ type OrderData = {
   zipcode: string;
   city: string;
   address: string;
+  paid: boolean,
   product: any
 };
 export async function addOrder({
@@ -20,6 +21,7 @@ export async function addOrder({
   zipcode,
   city,
   address,
+  paid,
   product,
 }: OrderData) {
   try {
@@ -67,6 +69,7 @@ export async function addOrder({
         email,
         zipcode,
         city,
+        paid,
         address,
         product: updatedProductData,
         total,

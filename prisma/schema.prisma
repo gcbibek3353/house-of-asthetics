@@ -31,6 +31,7 @@ model order {
   createdDate DateTime @default(now())
   product     Json
   total       Int
+  paid        Boolean  @default(false)
   status      status   @default(processing)
 }
 
