@@ -19,11 +19,13 @@ import { useRecoilState } from "recoil";
 import { cartItemState } from "@/recoil/atom";
 import { useRouter } from "next/navigation";
 
-import { addOrder } from "@/actions/order";
+import { addOrder, calculateCartTotal } from "@/actions/order";
 import { toast } from "react-toastify";
+import Razorpay from "razorpay";
 
 export default function Checkout() {
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
+  const [loading, setLoading] = useState(false)
 
   // Initialize state for billing details
   const [billingDetails, setBillingDetails] = useState({
@@ -52,9 +54,30 @@ export default function Checkout() {
 
   const total = subtotal;
 
+  const createOrderId = async (amount: string) => {
+    try {
+      const response = await fetch('/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: parseFloat(amount!) * 100,
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      return data.orderId;
+    } catch (error) {
+      console.error('There was a problem with your fetch operation:', error);
+    }
+  };
 
 
-  
 
   const updateQuantity = (id: number, change: number) => {
     setCartItems((items: any) =>
@@ -76,12 +99,68 @@ export default function Checkout() {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  const processPayment = async (e: any) => {
     e.preventDefault();
+    try {
+      setLoading(true)
+      const amount = await calculateCartTotal(cartItems)
+      const orderId: string = await createOrderId(amount);
+      const options = {
+        key: process.env.KEY_ID,
+        amount: parseFloat(amount!) * 100,
+        currency: "INR",
+        name: billingDetails.name,
+        order_id: orderId,
+        handler: async function (response: any) {
+          const data = {
+            orderCreationId: orderId,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+          };
+
+          const result = await fetch('/api/verify', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' },
+          });
+          const res = await result.json();
+          if (res.isOk) {
+            setLoading(false)
+            handleSubmit()
+          }
+          else {
+            alert(res.message);
+          }
+        },
+        prefill: {
+          name: billingDetails.name,
+          email: billingDetails.email,
+        },
+        theme: {
+          color: '#3399cc',
+        },
+      };
+
+
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.on('payment.failed', function (response: any) {
+        alert(response.error.description);
+      });
+      paymentObject.open();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const handleSubmit = async () => {
+
     console.log(cartItems);
     console.log("Billing Details: ", billingDetails);
     const { name, email, phone, address, city, zipCode } = billingDetails;
-    const added :any= await addOrder({
+    const added: any = await addOrder({
       name,
       email,
       phone,
@@ -93,28 +172,7 @@ export default function Checkout() {
 
     setCartItems([]);
 
-    const createOrderId = async () => {
-      try {
-       const response = await fetch('/api/order', {
-        method: 'POST',
-        headers: {
-         'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-         amount: parseFloat(added?.price)*100,
-        })
-       });
-    
-       if (!response.ok) {
-        throw new Error('Network response was not ok');
-       }
-    
-       const data = await response.json();
-       return data.orderId;
-      } catch (error) {
-       console.error('There was a problem with your fetch operation:', error);
-      }
-     };
+
 
 
     toast.success("Order is placed");
@@ -125,7 +183,7 @@ export default function Checkout() {
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
       <div className="grid md:grid-cols-2 gap-8">
         {/* Checkout Form */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={processPayment}>
           <Card>
             <CardHeader>
               <CardTitle>Billing Details</CardTitle>
@@ -199,7 +257,9 @@ export default function Checkout() {
             </CardContent>
             <CardFooter>
               <Button type="submit" className="w-full mt-4">
-                Place Order
+
+
+                {loading ? ("loading....") : ('Place Order')}
               </Button>
             </CardFooter>
           </Card>
