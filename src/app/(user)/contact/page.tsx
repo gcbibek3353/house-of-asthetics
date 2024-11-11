@@ -92,7 +92,7 @@ export default function ContactPage() {
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <MapPinIcon className="h-5 w-5 text-gray-500" />
-                <p>Bannikuppe, Karnataka 562117</p>
+                <p>JCVP+MW, Bannikuppe, Karnataka 562117</p>
               </div>
               <div className="flex items-center space-x-2">
                 <PhoneIcon className="h-5 w-5 text-gray-500" />
