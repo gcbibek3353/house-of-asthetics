@@ -166,6 +166,10 @@ export default function Checkout() {
 
   const handleSubmit = async (paid: boolean) => {
 
+
+
+
+
     console.log(cartItems);
     console.log("Billing Details: ", billingDetails);
     const { name, email, phone, address, city, zipCode } = billingDetails;
