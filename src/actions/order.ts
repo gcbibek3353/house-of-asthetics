@@ -11,6 +11,7 @@ type OrderData = {
   zipcode: string;
   city: string;
   address: string;
+  paid: boolean,
   product: any
 };
 export async function addOrder({
@@ -20,6 +21,7 @@ export async function addOrder({
   zipcode,
   city,
   address,
+  paid,
   product,
 }: OrderData) {
   try {
@@ -67,6 +69,7 @@ export async function addOrder({
         email,
         zipcode,
         city,
+        paid,
         address,
         product: updatedProductData,
         total,
@@ -121,5 +124,41 @@ export async function updateOrderStatus({ orderId, status }: UpdateOrderStatusDa
   } catch (error) {
     console.error("Failed to update order status:", error);
     throw new Error("Failed to update order status");
+  }
+}
+
+
+export async function calculateCartTotal(cart: any) {
+  try {
+    // Validate input
+    if (!cart || cart.length === 0) {
+      throw new Error("Cart is empty");
+    }
+
+    // Get the IDs of products in the cart
+    const productIds = cart.map((item: any) => item.id);
+
+    // Fetch the product prices from the database based on the product IDs
+    const products = await prisma.product.findMany({
+      where: {
+        id: {
+          in: productIds,
+        },
+      },
+    });
+
+    // Map the product prices by their IDs for easier lookup
+    const productMap = new Map(products.map(p => [p.id, p.price]));
+
+    // Calculate the total price based on the current product prices and quantities in the cart
+    const totalPrice = cart.reduce((sum: any, item: any) => {
+      const price = productMap.get(item.id) || 0;
+      return sum + price * item.quantity;
+    }, 0);
+
+    return totalPrice;
+  } catch (error) {
+    console.error("Failed to calculate cart total:", error);
+    throw new Error("Failed to calculate cart total");
   }
 }
