@@ -27,7 +27,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 export default function Checkout() {
   const [cartItems, setCartItems] = useRecoilState<any>(cartItemState);
   const [loading, setLoading] = useState(false)
-  const [mode, setMode] = useState("COD")
+  const [mode, setMode] = useState("ONLINE")
 
   // Initialize state for billing details
   const [billingDetails, setBillingDetails] = useState({
